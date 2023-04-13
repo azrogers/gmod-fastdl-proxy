@@ -1,0 +1,11 @@
+html 
+	head 
+		title= 'Directory listing for ' + dir
+	body
+		h1= dir
+		ul
+			each path in paths
+				li
+					a(href=path.url)= path.name
+		hr
+		em fastdl-proxy

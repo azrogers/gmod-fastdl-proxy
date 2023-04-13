@@ -1,0 +1,8 @@
+{
+	"gameDir": "K:/Games/Garry's Mod/server/steamapps/common/GarrysModDS/garrysmod",
+	"s3AccessKey": "",
+	"s3SecretKey": "",
+	"s3Endpoint": "https://s3.us-central-1.wasabisys.com",
+	"s3Region": "us-central-1",
+	"s3Bucket": "gmod-fastdl"
+}
