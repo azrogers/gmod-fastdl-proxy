@@ -11,7 +11,7 @@ import { Config } from "./config";
 import VirtualFileSystem from "./vfs";
 import Cache from "./cache";
 
-const Extensions: string[] = ["bsp", "vtf", "vmt", "png", "svg", "vtx", "vvd", "mdl", "phy", "pcf", "wav", "mp3", "ogg", "otf", "ttf"];
+const Extensions: string[] = ["bsp", "vtf", "vmt", "jpg", "png", "svg", "vtx", "vvd", "mdl", "phy", "pcf", "wav", "mp3", "ogg", "otf", "ttf"];
 
 class Uploader
 {
