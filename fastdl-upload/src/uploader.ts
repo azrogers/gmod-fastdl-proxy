@@ -33,7 +33,7 @@ class Uploader
 
 	async upload(vfs: VirtualFileSystem, cache: Cache)
 	{
-		let files = vfs.getFilePaths(Extensions);
+		let files = vfs.getPaths(Extensions);
 		let promises = [];
 		signale.pending(`found ${files.length} files to upload`);
 		
@@ -45,8 +45,8 @@ class Uploader
 		for (let i = 0; i < files.length; i++)
 		{
 			let promise = limit(() => this.uploadFile(
-				path.join(this.config.gameDir, files[i]),
-				files[i],
+				path.join(this.config.gameDir, files[i].file),
+				files[i].game,
 				cache,
 				progressBar));
 			promises.push(promise);

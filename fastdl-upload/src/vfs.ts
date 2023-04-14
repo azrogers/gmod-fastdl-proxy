@@ -19,6 +19,8 @@ class VfsNode
 	}
 }
 
+type FilePaths = { game: string, file: string };
+
 // replicates the VFS used by gmod
 class VirtualFileSystem
 {
@@ -31,58 +33,41 @@ class VirtualFileSystem
 		this.tree = new VfsNode("", "/", true);
 	}
 
-	public getGamePaths(extensions: string[]): string[]
+	public getPaths(extensions: string[]): FilePaths[]
 	{
-		let accum: string[] = [];
-		this.getGamePathsRecursive(this.tree, "", extensions, accum);
+		let accum: FilePaths[] = [];
+		this.getPathsRecursive(this.tree, "", extensions, accum);
 		return accum;
 	}
 
-	private getGamePathsRecursive(node: VfsNode, parent: string, extensions: string[], accum: string[])
+	private getPathsRecursive(node: VfsNode, parent: string, extensions: string[], accum: FilePaths[])
 	{
 		Object.keys(node.children).forEach((k: string) =>
 		{
 			let child: VfsNode = node.children[k];
 			if (child.isDir)
 			{
-				this.getGamePathsRecursive(child, `${parent}${child.name}/`, extensions, accum);	
+				this.getPathsRecursive(child, `${parent}${child.name}/`, extensions, accum);	
 			}
 			else
 			{
 				let ext = path.extname(child.name).substring(1);
 				if (extensions.indexOf(ext) !== -1)
 				{
-					accum.push(`${parent}${child.name}`);	
+					accum.push({ game: `${parent}${child.name}`, file: child.path });	
 				}
 			}
 		});
+	}
+
+	public getGamePaths(extensions: string[]): string[]
+	{
+		return this.getPaths(extensions).map(e => e.game);
 	}
 
 	public getFilePaths(extensions: string[]): string[]
 	{
-		let accum: string[] = [];
-		this.getFilePathsRecursive(this.tree, extensions, accum);
-		return accum;
-	}
-
-	private getFilePathsRecursive(node: VfsNode, extensions: string[], accum: string[])
-	{
-		Object.keys(node.children).forEach((k: string) =>
-		{
-			let child: VfsNode = node.children[k];
-			if (child.isDir)
-			{
-				this.getFilePathsRecursive(child, extensions, accum);	
-			}
-			else
-			{
-				let ext = path.extname(child.name).substring(1);
-				if (extensions.indexOf(ext) !== -1)
-				{
-					accum.push(child.path);	
-				}
-			}
-		});
+		return this.getPaths(extensions).map(e => e.file);
 	}
 
 	public async buildVfs()

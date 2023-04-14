@@ -6,6 +6,7 @@ class FileNode
 {
 	public name: string;
 	public children: { [key: string]: FileNode }
+	public path: string;
 
 	constructor(name: string)
 	{
@@ -67,11 +68,15 @@ class Server
 	{
 		let parts = file.split('/');
 		let node = this.rootNode;
+		let pathSoFar = [];
 		for (let i = 0; i < parts.length; i++)
 		{
-			let newNode = node.children[parts[i]] || new FileNode(parts[i]);
-			node.children[parts[i]] = newNode;
+			let k = parts[i].toLowerCase();
+			let newNode = node.children[k] || new FileNode(k);
+			node.children[k] = newNode;
 			node = newNode;
+			pathSoFar.push(parts[i]);
+			node.path = pathSoFar.join('/');
 		}
 	}
 
@@ -95,20 +100,19 @@ class Server
 		}
 
 		let parts = path.split('/');
-		let finalParts = [];
 		let node = this.rootNode;
 		for (let i = 0; i < parts.length; i++)
 		{
-			node = node.children[parts[i]];
+			let k = parts[i].toLowerCase();
+			node = node.children[k];
 			if (!node)
 			{
 				res.sendStatus(404);
 				return next();
 			}
-			finalParts.push(node.name);
 		}
 
-		let finalPath = decodeURIComponent(finalParts.join('/').replace(/\+/g, ' '));
+		let finalPath = decodeURIComponent(node.path.replace(/\+/g, ' '));
 
 		let childKeys = Object.keys(node.children);
 		if (childKeys.length > 0)

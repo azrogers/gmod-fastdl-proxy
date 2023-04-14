@@ -132,3 +132,4 @@ dist
 config.json
 cache.json
 resource.lua
+*.code-workspace
